@@ -3,6 +3,10 @@
     {
       "source": "/dailynews/:path*",
       "destination": "https://tophub.today/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }
