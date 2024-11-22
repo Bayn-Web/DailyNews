@@ -1,8 +1,8 @@
 {
-  "routes": [
+  "rewrites": [
     {
-      "src": "/dailynews/(.*)",
-      "dest": "https://tophub.today"
+      "source": "/dailynews/:path*",
+      "destination": "https://tophub.today/:path*"
     }
   ]
 }
