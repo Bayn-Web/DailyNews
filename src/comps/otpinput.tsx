@@ -12,13 +12,12 @@ export default () => {
   const navigater = useNavigate();
   useEffect(() => {
     if (value?.length == 6) {
-      console.log(1)
       navigater("/news")
     }
   }, [value])
   return (
     <>
-      <InputOTP maxLength={6} onChange={(value) => setValue(value)}>
+      <InputOTP autoFocus maxLength={6} onChange={(value) => setValue(value)}>
         <InputOTPGroup>
           {[0, 1, 2].map((item) =>
             (<InputOTPSlot key={item} index={item} />)

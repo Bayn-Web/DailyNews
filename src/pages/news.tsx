@@ -9,21 +9,6 @@ import { ToastAction } from "@radix-ui/react-toast"
 import axios from "axios"
 import { useEffect, useState } from "react"
 
-type TheNew = {
-  ID: string,
-  description: string,
-  domain: string,
-  extra: string,
-  logo: string,
-  md5: string,
-  nodeids: string,
-  sitename: string,
-  thumbnail: string, //pic
-  time: string, // timestemp
-  title: string,
-  url: string,//origin url
-}
-
 const doFirstTimeFunc = (func: Function, time = 2000) => {
   let isAllowed = true;
   let timeoutId: NodeJS.Timeout | undefined;
@@ -42,7 +27,6 @@ const doFirstTimeFunc = (func: Function, time = 2000) => {
 };
 
 const showToast = (toaster: { toast: any }) => doFirstTimeFunc(() => {
-  console.log("show toast")
   toaster.toast({
     title: "What's up!",
     description: "Finish all the news today----" + getDay(),
@@ -51,6 +35,7 @@ const showToast = (toaster: { toast: any }) => doFirstTimeFunc(() => {
     )
   })
 })
+let originalData: TheNew[];
 
 const getDay = () => {
   const date = new Date()
@@ -75,39 +60,53 @@ export default () => {
             description: parser.parseFromString(data.description, "text/html")!.querySelector("body")!.innerText?.replaceAll(/<.*?>/g, "")
           }
         })
-        setStoredNews(res.data.data)
+        originalData = res.data.data;
+        setStoredNews(originalData)
         localStorage.setItem("news", getDay() + "::" + JSON.stringify(res.data.data))
       })
     } else {
-      setStoredNews(JSON.parse(localStorage.getItem("news")!.split("::")[1]))
+      originalData = JSON.parse(localStorage.getItem("news")!.split("::")[1])
+      setStoredNews(originalData)
     }
     const handleScroll = () => {
       if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
         toast();
       }
     };
+    const handleHashChange = () => {
+      setStoredNews(() => {
+        return originalData.filter(res => {
+          return res.sitename === decodeURI(window.location.hash).slice(1)
+        })
+      })
+    }
     window.addEventListener("scroll", handleScroll);
+
+    window.addEventListener("hashchange", handleHashChange)
     return () => {
       window.removeEventListener("scroll", handleScroll)
+      window.removeEventListener("hashchange", handleHashChange)
     }
   }, [])
 
   return (<>
-    <Accordion type="single" collapsible>
-      {
-        storedNews?.map((theNew) => {
-          return (
-            <AccordionItem key={theNew.ID} value={theNew.ID}>
-              <AccordionTrigger>
-                <a target="_blank" href={theNew.url}>🔗</a>
-                {theNew.title}
-              </AccordionTrigger>
-              <AccordionContent>
-                <a target="_blank" href={theNew.url} dangerouslySetInnerHTML={{ __html: theNew.description }} className="transition-colors hover:text-[hsl(var(--text))] line-clamp-2 mx-3"></a>
-              </AccordionContent>
-            </AccordionItem>)
-        })
-      }
-    </Accordion>
+    <div className="translate-y-[56px]">
+      <Accordion type="single" collapsible>
+        {
+          storedNews?.map((theNew) => {
+            return (
+              <AccordionItem key={theNew.ID} value={theNew.ID}>
+                <AccordionTrigger>
+                  <a target="_blank" href={theNew.url}>🔗</a>
+                  {theNew.title}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <a target="_blank" href={theNew.url} dangerouslySetInnerHTML={{ __html: theNew.description }} className="transition-colors hover:text-[hsl(var(--text))] line-clamp-2 mx-3"></a>
+                </AccordionContent>
+              </AccordionItem>)
+          })
+        }
+      </Accordion>
+    </div>
   </>)
 }

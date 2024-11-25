@@ -4,7 +4,7 @@ import MyDrawer from "@/comps/myDrawer";
 
 export default () => {
     return (
-        <div className="h-screen w-screen flex items-center justify-center">
+        <div className="h-full w-screen flex items-center justify-center">
             <Load />
         </div>
     );
