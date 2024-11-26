@@ -8,7 +8,7 @@ import { useNavigate } from "react-router"
 export default () => {
   const navigater = useNavigate();
   return (
-    <div className="fixed h-[56px] w-screen flex justify-between items-center z-10" style={{
+    <div className="fixed h-[56px] w-screen flex justify-between items-center z-10 border-b-slate-600 border" style={{
       backgroundImage: 'radial-gradient(transparent 1px,hsl(var(--background)) 1px)',
       backdropFilter: 'saturate(50%) blur(4px)',
       backgroundSize: '4px 4px'
@@ -22,6 +22,6 @@ export default () => {
           <AvatarFallback>B</AvatarFallback>
         </Avatar>
       </div>
-    </div >
+    </div>
   )
 }

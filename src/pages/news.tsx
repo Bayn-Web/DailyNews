@@ -7,7 +7,7 @@ import {
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@radix-ui/react-toast"
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 const doFirstTimeFunc = (func: Function, time = 2000) => {
   let isAllowed = true;
@@ -46,6 +46,7 @@ export default () => {
   const [storedNews, setStoredNews] = useState<TheNew[]>([]);
   const toaster = useToast();
   const toast = showToast(toaster)
+  const bar = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (localStorage.getItem("news") === null || localStorage.getItem("news")!.split("::")[0] !== getDay()) {
@@ -69,6 +70,11 @@ export default () => {
       setStoredNews(originalData)
     }
     const handleScroll = () => {
+      setTimeout(() => {
+        if (bar.current) {
+          bar.current.style.animationDelay = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * -100 + "s"
+        }
+      }, 0);
       if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
         toast();
       }
@@ -90,23 +96,38 @@ export default () => {
   }, [])
 
   return (<>
-    <div className="translate-y-[56px]">
-      <Accordion type="single" collapsible>
-        {
-          storedNews?.map((theNew) => {
-            return (
-              <AccordionItem key={theNew.ID} value={theNew.ID}>
-                <AccordionTrigger>
-                  <a target="_blank" href={theNew.url}>🔗</a>
-                  {theNew.title}
-                </AccordionTrigger>
-                <AccordionContent>
-                  <a target="_blank" href={theNew.url} dangerouslySetInnerHTML={{ __html: theNew.description }} className="transition-colors hover:text-[hsl(var(--text))] line-clamp-2 mx-3"></a>
-                </AccordionContent>
-              </AccordionItem>)
-          })
+    <div>
+      <div ref={bar} className="fixed bottom-0 h-1 w-screen z-10"
+        style={
+          {
+            backgroundImage: "linear-gradient(to right, hsl(var(--text)), hsl(var(--background)))",
+            animationName: "trans-gradient-right",
+            animationDuration: "100s",
+            animationTimingFunction: "linear",
+            animationPlayState: "paused"
+          }
         }
-      </Accordion>
+
+      ></div>
+      <div className="translate-y-[56px]">
+        <Accordion type="single" collapsible>
+          {
+            storedNews?.map((theNew) => {
+              return (
+                <AccordionItem key={theNew.ID} value={theNew.ID}>
+                  <AccordionTrigger>
+                    <a target="_blank" href={theNew.url}>🔗</a>
+                    {theNew.title}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <a target="_blank" href={theNew.url} dangerouslySetInnerHTML={{ __html: theNew.description }} className="transition-colors hover:text-[hsl(var(--text))] line-clamp-2 mx-3"></a>
+                  </AccordionContent>
+                </AccordionItem>)
+            })
+          }
+        </Accordion>
+      </div>
     </div>
+
   </>)
 }

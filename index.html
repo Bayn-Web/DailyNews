@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="hide-scrollbar" lang="en">
 
 <head>
   <meta charset="UTF-8" />
@@ -7,6 +7,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="./src/output.css" rel="stylesheet">
   <title>Daily News</title>
+  <style>
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
 </head>
 
 <body>

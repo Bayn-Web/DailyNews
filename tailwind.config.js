@@ -1,3 +1,5 @@
+import { transform } from 'lodash';
+
 /** @type {import('tailwindcss').Config} */
 export default {
 	darkMode: ["class"],
@@ -56,12 +58,13 @@ export default {
     			}
     		},
     		animation: {
-    			'trans-out': 'transOut 2s ease-in-out forwards',
+    			'trans-out': 'trans-out 2s ease-in-out forwards',
+    			'trans-gradient-right': 'trans-gradient-right 2s linear forwards',
     			'accordion-down': 'accordion-down 0.2s ease-out',
     			'accordion-up': 'accordion-up 0.2s ease-out'
     		},
     		keyframes: {
-    			transOut: {
+    			"trans-out": {
     				'0%': {
     					opacity: '1',
     					color: 'hsl(#000)'
@@ -72,6 +75,14 @@ export default {
     				'100%': {
     					opacity: '1',
     					color: 'hsl(114.16deg 62.86% 57.95%)'
+    				}
+    			},
+    			"trans-gradient-right": {
+    				'0%': {
+    					transform: 'translateX(0%)'
+    				},
+    				'100%': {
+    					transform: 'translateX(100%)'
     				}
     			},
     			'accordion-down': {
