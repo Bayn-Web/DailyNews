@@ -1,0 +1,16 @@
+{
+  "id": "4762641",
+  "name": "react_daily-news",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "11372714",
+      "name": "微博",
+      "font_class": "weibo",
+      "unicode": "e8bb",
+      "unicode_decimal": 59579
+    }
+  ]
+}

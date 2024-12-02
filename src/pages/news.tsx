@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@radix-ui/react-toast"
 import axios from "axios"
 import { useEffect, useRef, useState } from "react"
+import '@/assets/iconfont/iconfont.css';
 
 const doFirstTimeFunc = (func: Function, time = 2000) => {
   let isAllowed = true;
@@ -82,10 +83,11 @@ export default () => {
     const handleHashChange = () => {
       setStoredNews(() => {
         return originalData.filter(res => {
-          return res.sitename === decodeURI(window.location.hash).slice(1)
+          return res.sitename.includes(decodeURI(window.location.hash).slice(1))
         })
       })
     }
+    handleHashChange();
     window.addEventListener("scroll", handleScroll);
 
     window.addEventListener("hashchange", handleHashChange)
@@ -97,14 +99,10 @@ export default () => {
 
   return (<>
     <div>
-      <div ref={bar} className="fixed bottom-0 h-1 w-screen z-10"
+      <div ref={bar} className="fixed bottom-0 h-1 w-screen z-10 animate-trans-gradient-right"
         style={
           {
             backgroundImage: "linear-gradient(to right, hsl(var(--text)), hsl(var(--background)))",
-            animationName: "trans-gradient-right",
-            animationDuration: "100s",
-            animationTimingFunction: "linear",
-            animationPlayState: "paused"
           }
         }
 
@@ -117,7 +115,10 @@ export default () => {
                 <AccordionItem key={theNew.ID} value={theNew.ID}>
                   <AccordionTrigger>
                     <a target="_blank" href={theNew.url}>🔗</a>
-                    {theNew.title}
+                    <div>
+                      {theNew.title}
+                      {theNew.sitename==="微博"?<i className="iconfont">&#xe8bb;</i>:<></>}
+                    </div>
                   </AccordionTrigger>
                   <AccordionContent>
                     <a target="_blank" href={theNew.url} dangerouslySetInnerHTML={{ __html: theNew.description }} className="transition-colors hover:text-[hsl(var(--text))] line-clamp-2 mx-3"></a>

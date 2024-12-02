@@ -33,6 +33,7 @@ export default ({ className }: { className: string }) => {
       label: r
     }
   })
+  frameworks.unshift({ value: "", label: "All" })
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("");
 

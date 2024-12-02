@@ -59,7 +59,7 @@ export default {
     		},
     		animation: {
     			'trans-out': 'trans-out 2s ease-in-out forwards',
-    			'trans-gradient-right': 'trans-gradient-right 2s linear forwards',
+    			'trans-gradient-right': 'trans-gradient-right 100s linear paused forwards',
     			'accordion-down': 'accordion-down 0.2s ease-out',
     			'accordion-up': 'accordion-up 0.2s ease-out'
     		},
