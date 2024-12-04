@@ -16,7 +16,7 @@ import {
 import { ChevronsUpDown, Check } from "lucide-react"
 import React from "react"
 
-export default ({ className }: { className: string }) => {
+export default () => {
   let arr: string[] = [];
   if (localStorage.getItem("news") !== null) {
     (JSON.parse(localStorage.getItem("news")!.split("::")[1]) as TheNew[]).forEach(r => {
@@ -50,7 +50,7 @@ export default ({ className }: { className: string }) => {
     }
   }, [])
   return (
-    <div className={className}>
+    <div>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button

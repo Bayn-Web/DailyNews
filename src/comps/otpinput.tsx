@@ -5,7 +5,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp"
 import { useEffect, useState } from "react"
-import { useNavigate, useNavigation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default () => {
   const [value, setValue] = useState<string>("");

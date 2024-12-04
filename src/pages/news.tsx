@@ -65,6 +65,7 @@ export default () => {
         originalData = res.data.data;
         setStoredNews(originalData)
         localStorage.setItem("news", getDay() + "::" + JSON.stringify(res.data.data))
+        handleHashChange();
       })
     } else {
       originalData = JSON.parse(localStorage.getItem("news")!.split("::")[1])
@@ -87,7 +88,6 @@ export default () => {
         })
       })
     }
-    handleHashChange();
     window.addEventListener("scroll", handleScroll);
 
     window.addEventListener("hashchange", handleHashChange)
@@ -117,7 +117,8 @@ export default () => {
                     <a target="_blank" href={theNew.url}>🔗</a>
                     <div>
                       {theNew.title}
-                      {theNew.sitename==="微博"?<i className="iconfont">&#xe8bb;</i>:<></>}
+                      {theNew.sitename === "微博" ?
+                        <i className="iconfont">&#xe8bb;</i> : <></>}
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
