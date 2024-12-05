@@ -10,9 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { useNavigate } from "react-router"
-import { AlertTitle } from "@/components/ui/alert"
-import { Button, buttonVariants } from "@/components/ui/button"
-import { Popover } from "@/components/ui/popover"
+import { buttonVariants } from "@/components/ui/button"
 
 export default () => {
   const navigater = useNavigate();
@@ -27,7 +25,7 @@ export default () => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              <div className={buttonVariants({variant:'ghost'})}>!</div>
+              <div className={buttonVariants({ variant: 'ghost' })}>!</div>
             </TooltipTrigger>
             <TooltipContent>
               <div className="flex align-middle">
