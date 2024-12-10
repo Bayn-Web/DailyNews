@@ -1,14 +1,16 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import MyDrawer from "@/comps/myDrawer";
 
-export default () => {
+const Loader = () => {
     return (
         <div className="h-full w-screen flex items-center justify-center">
             <Load />
         </div>
     );
 };
+
+export default Loader;
 
 const Load = () => {
     const [loadingProcess, setProcess] = useState(0);

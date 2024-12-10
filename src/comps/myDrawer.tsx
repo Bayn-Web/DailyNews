@@ -10,13 +10,14 @@ import {
 } from "@/components/ui/drawer";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import {
-  type ChartConfig, ChartContainer, ChartLegend,
+  ChartContainer, ChartLegend,
   ChartLegendContent, ChartTooltip, ChartTooltipContent
 } from "@/components/ui/chart"
+import { ChartConfig } from "@/components/ui/chart"
 import OTPinput from "@/comps/otpinput"
 
 
-const chartConfig = {
+const chartConfig: ChartConfig = {
   desktop: {
     label: "Desktop",
     color: "#2563eb",
@@ -25,7 +26,7 @@ const chartConfig = {
     label: "Mobile",
     color: "#60a5fa",
   },
-} satisfies ChartConfig
+}
 export default () => {
   const chartData = [
     { month: "January", desktop: 186, mobile: 80 },

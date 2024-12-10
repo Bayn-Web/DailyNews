@@ -17,7 +17,7 @@ import { ChevronsUpDown, Check } from "lucide-react"
 import React from "react"
 
 export default () => {
-  let arr: string[] = [];
+  const arr: string[] = [];
   if (localStorage.getItem("news") !== null) {
     (JSON.parse(localStorage.getItem("news")!.split("::")[1]) as TheNew[]).forEach(r => {
       if (arr.includes(r.sitename)) {

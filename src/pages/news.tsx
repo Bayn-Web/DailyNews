@@ -7,10 +7,10 @@ import {
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@radix-ui/react-toast"
 import axios from "axios"
-import { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import '@/assets/iconfont/iconfont.css';
 
-const doFirstTimeFunc = (func: Function, time = 2000) => {
+const doFirstTimeFunc = (func: () => void, time = 2000) => {
   let isAllowed = true;
   let timeoutId: NodeJS.Timeout | undefined;
   return () => {
@@ -27,7 +27,7 @@ const doFirstTimeFunc = (func: Function, time = 2000) => {
   };
 };
 
-const showToast = (toaster: { toast: any }) => doFirstTimeFunc(() => {
+const showToast = (toaster: ReturnType<typeof useToast>) => doFirstTimeFunc(() => {
   toaster.toast({
     title: "What's up!",
     description: "Finish all the news today----" + getDay(),
@@ -43,7 +43,7 @@ const getDay = () => {
   return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
 }
 
-export default () => {
+const News = () => {
   const [storedNews, setStoredNews] = useState<TheNew[]>([]);
   const toaster = useToast();
   const toast = showToast(toaster)
@@ -114,7 +114,7 @@ export default () => {
               return (
                 <AccordionItem key={theNew.ID} value={theNew.ID}>
                   <AccordionTrigger>
-                    <a target="_blank" href={theNew.url}>🔗</a>
+                    <a target="_blank" href={theNew.url} rel="noreferrer">🔗</a>
                     <div>
                       {theNew.title}
                       {theNew.sitename === "微博" ?
@@ -122,7 +122,7 @@ export default () => {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
-                    <a target="_blank" href={theNew.url} dangerouslySetInnerHTML={{ __html: theNew.description }} className="transition-colors hover:text-[hsl(var(--text))] line-clamp-2 mx-3"></a>
+                    <a target="_blank" href={theNew.url} dangerouslySetInnerHTML={{ __html: theNew.description }} className="transition-colors hover:text-[hsl(var(--text))] line-clamp-2 mx-3" rel="noreferrer"></a>
                   </AccordionContent>
                 </AccordionItem>)
             })
@@ -133,3 +133,5 @@ export default () => {
 
   </>)
 }
+
+export default News;
