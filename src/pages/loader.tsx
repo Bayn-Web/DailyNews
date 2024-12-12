@@ -1,6 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import MyDrawer from "@/comps/myDrawer";
+import { getDay } from "@/lib/utils";
+import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
+import { buttonVariants } from "@/components/ui/button"
+import { ToastAction } from "@/components/ui/toast";
 
 const Loader = () => {
     return (
@@ -15,12 +20,54 @@ export default Loader;
 const Load = () => {
     const [loadingProcess, setProcess] = useState(0);
     const loaderRef = useRef<HTMLDivElement>(null);
-
+    const toaster = useToast();
+    let interval: undefined | NodeJS.Timeout;
     useEffect(() => {
-        const interval = setInterval(() => {
-            setProcess((prev) => (prev < 100 ? prev + 1 : 100));
-        }, 100);
-        return () => clearInterval(interval);
+        if (localStorage.getItem("news") === null || localStorage.getItem("news")!.split("::")[0] !== getDay()) {
+            interval = setInterval(() => {
+                setProcess((prev) => {
+                    if (prev == 100) {
+                        clearInterval(interval);
+                        return 100;
+                    }
+                    return prev < 99 ? prev + 1 : 99
+                });
+            }, 100);
+            const form = new FormData();
+            form.append("c", "hot");
+            form.append("t", "daily");
+            axios.post("/dailynews/do", form).then(res => {
+                setProcess(100);
+                const parser = new DOMParser();
+                res.data.data = (res.data.data as TheNew[]).map(data => {
+                    return {
+                        ...data,
+                        description: parser.parseFromString(data.description, "text/html")!.querySelector("body")!.innerText?.replaceAll(/<.*?>/g, "")
+                    }
+                })
+                localStorage.setItem("news", getDay() + "::" + JSON.stringify(res.data.data));
+                toaster.toast({
+                    title: "Data has loaded successfully.",
+                    action: (
+                        <ToastAction altText="load data successfully" className={buttonVariants({ variant: "ghost" })}>
+                            check it
+                        </ToastAction>
+                    )
+                })
+            })
+        } else {
+            setProcess(100);
+            setTimeout(() => {
+                toaster.toast({
+                    title: "Cache has been loaded.",
+                    action: (
+                        <ToastAction altText="check cached data" className={buttonVariants({ variant: "ghost" })}>
+                            check it
+                        </ToastAction>
+                    )
+                })
+            }, 500);
+        }
     }, []);
 
     useEffect(() => {
@@ -41,11 +88,18 @@ const Load = () => {
         );
     }, [loadingProcess]);
 
+    const cachedDrawer = useMemo(() => {
+        console.log(loadingProcess)
+        return (
+            <MyDrawer value={loadingProcess} />
+        );
+    }, [loadingProcess === 100]);
+
     return (
         <div className="flex items-center h-fit w-screen flex-col gap-2">
             {cachedDiv}
             <Progress value={loadingProcess} />
-            <MyDrawer />
+            {cachedDrawer}
         </div>
     );
 };

@@ -27,7 +27,7 @@ const chartConfig: ChartConfig = {
     color: "#60a5fa",
   },
 }
-export default () => {
+export default ({ value }: { value: number }) => {
   const chartData = [
     { month: "January", desktop: 186, mobile: 80 },
     { month: "February", desktop: 305, mobile: 200 },
@@ -38,7 +38,11 @@ export default () => {
   ]
   return (
     <Drawer>
-      <DrawerTrigger>Open</DrawerTrigger>
+      {
+        value == 100 ?
+          <DrawerTrigger>Open</DrawerTrigger>
+          : <></>
+      }
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>CODER NEWS</DrawerTitle>
