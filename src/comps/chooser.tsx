@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/popover"
 import { ChevronsUpDown, Check } from "lucide-react"
 import React from "react"
+import { setSource } from "@/store/source-store"
+import store from "@/store"
 
 export default () => {
   const arr: string[] = [];
@@ -77,6 +79,8 @@ export default () => {
                     value={framework.value}
                     onSelect={(currentValue) => {
                       setValue(currentValue === value ? "" : currentValue);
+                      // save in store
+                      store.dispatch(setSource(currentValue));
                       window.location.hash = currentValue;
                       setOpen(false)
                     }}

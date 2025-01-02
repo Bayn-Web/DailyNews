@@ -11,7 +11,7 @@ import '@/assets/iconfont/iconfont.css';
 import { NavLink } from "react-router-dom"
 import { cn, doFirstTimeFunc, getDay } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-
+import { useSelector } from "react-redux";
 
 const showToast = (toaster: ReturnType<typeof useToast>) => doFirstTimeFunc(() => {
   toaster.toast({
@@ -22,15 +22,13 @@ const showToast = (toaster: ReturnType<typeof useToast>) => doFirstTimeFunc(() =
     )
   })
 })
-let originalData: TheNew[];
 
 const News = () => {
   let storedNews: TheNew[] = localStorage.getItem("news") ? JSON.parse((localStorage.getItem("news")!).split("::")[1]) : [];
-  originalData = storedNews;
   const toaster = useToast();
   const toast = showToast(toaster)
   const bar = useRef<HTMLDivElement>(null)
-
+  const source = useSelector<{ source: { source: string } }, string>(state => state.source.source);
   useEffect(() => {
     const handleScroll = () => {
       setTimeout(() => {
@@ -42,17 +40,9 @@ const News = () => {
         toast();
       }
     };
-    const handleHashChange = () => {
-      storedNews = originalData.filter(res => {
-        return res.sitename.includes(decodeURI(window.location.hash).slice(1))
-      })
-    }
     window.addEventListener("scroll", handleScroll);
-
-    window.addEventListener("hashchange", handleHashChange)
     return () => {
       window.removeEventListener("scroll", handleScroll)
-      window.removeEventListener("hashchange", handleHashChange)
     }
   }, [])
 
@@ -78,7 +68,12 @@ const News = () => {
             :
             <Accordion type="single" collapsible>
               {
-                storedNews?.map((theNew) => {
+                storedNews?.filter((theNew) => {
+                  if (source === 'all') {
+                    return true;
+                  }
+                  return theNew.sitename.includes(source)
+                }).map((theNew) => {
                   return (
                     <AccordionItem key={theNew.ID} value={theNew.ID}>
                       <AccordionTrigger>
@@ -101,6 +96,7 @@ const News = () => {
     </div>
 
   </>)
+
 }
 
 export default News;

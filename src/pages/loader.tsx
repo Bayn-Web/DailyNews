@@ -40,9 +40,11 @@ const Load = () => {
                 setProcess(100);
                 const parser = new DOMParser();
                 res.data.data = (res.data.data as TheNew[]).map(data => {
+                    let description = parser.parseFromString(data.description, "text/html")!.querySelector("body")!.innerText?.replaceAll(/<.*?>/g, "");
+                    description = description === "" ? data.title + " has no description" : description;
                     return {
                         ...data,
-                        description: parser.parseFromString(data.description, "text/html")!.querySelector("body")!.innerText?.replaceAll(/<.*?>/g, "")
+                        description
                     }
                 })
                 localStorage.setItem("news", getDay() + "::" + JSON.stringify(res.data.data));
@@ -89,7 +91,6 @@ const Load = () => {
     }, [loadingProcess]);
 
     const cachedDrawer = useMemo(() => {
-        console.log(loadingProcess)
         return (
             <MyDrawer value={loadingProcess} />
         );
