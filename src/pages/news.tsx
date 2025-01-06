@@ -36,7 +36,7 @@ const News = () => {
           bar.current.style.animationDelay = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * -100 + "s"
         }
       }, 0);
-      if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+      if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 100) {
         toast();
       }
     };
