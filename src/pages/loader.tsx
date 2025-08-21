@@ -34,9 +34,8 @@ const Load = () => {
                 });
             }, 100);
             const form = new FormData();
-            form.append("c", "hot");
-            form.append("t", "daily");
-            axios.post("/dailynews/do", form).then(res => {
+            form.append("day", "1");
+            axios.post("/dailynews/hot/days", form).then(res => {
                 setProcess(100);
                 const parser = new DOMParser();
                 res.data.data = (res.data.data as TheNew[]).map(data => {
@@ -103,4 +102,5 @@ const Load = () => {
             {cachedDrawer}
         </div>
     );
+
 };
