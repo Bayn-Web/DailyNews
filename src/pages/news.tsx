@@ -6,12 +6,20 @@ import {
 } from "@/components/ui/accordion"
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@radix-ui/react-toast"
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import '@/assets/iconfont/iconfont.css';
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import { cn, doFirstTimeFunc, getDay } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { useSelector } from "react-redux";
+import { getCachedArticles } from "@/utils/db";
+import { RefreshCw } from "lucide-react"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 const showToast = (toaster: ReturnType<typeof useToast>) => doFirstTimeFunc(() => {
   toaster.toast({
@@ -24,11 +32,25 @@ const showToast = (toaster: ReturnType<typeof useToast>) => doFirstTimeFunc(() =
 })
 
 const News = () => {
-  let storedNews: TheNew[] = localStorage.getItem("news") ? JSON.parse((localStorage.getItem("news")!).split("::")[1]) : [];
+  const [storedNews, setStoredNews] = useState<TheNew[]>([]);
+  const [cachedDay, setCachedDay] = useState("");
   const toaster = useToast();
   const toast = showToast(toaster)
+  const navigate = useNavigate();
   const bar = useRef<HTMLDivElement>(null)
   const source = useSelector<{ source: { source: string } }, string>(state => state.source.source);
+  useEffect(() => {
+    const ls = localStorage.getItem("news")
+    if (ls) {
+      const parts = ls.split("::")
+      setCachedDay(parts[0])
+      setStoredNews(JSON.parse(parts[1]))
+    } else {
+      getCachedArticles().then(articles => {
+        if (articles.length > 0) setStoredNews(articles)
+      })
+    }
+  }, [])
   useEffect(() => {
     const handleScroll = () => {
       setTimeout(() => {
@@ -57,6 +79,26 @@ const News = () => {
 
       ></div>
       <div className="translate-y-[56px]">
+        <div className="flex items-center justify-center gap-2 py-4">
+          <span className="text-lg font-semibold">Today's News</span>
+          {cachedDay && cachedDay !== getDay() && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => navigate("/")}
+                    className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "h-8 w-8")}
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Data from {cachedDay}, click to refresh</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+        </div>
         {
           storedNews.length === 0 ?
             <div className="h-screen w-full flex justify-center">

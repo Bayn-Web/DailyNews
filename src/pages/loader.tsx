@@ -6,6 +6,7 @@ import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 import { buttonVariants } from "@/components/ui/button"
 import { ToastAction } from "@/components/ui/toast";
+import { cacheArticles } from "@/utils/db";
 
 const Loader = () => {
     return (
@@ -47,6 +48,7 @@ const Load = () => {
                     }
                 })
                 localStorage.setItem("news", getDay() + "::" + JSON.stringify(res.data.data));
+                cacheArticles(res.data.data);
                 toaster.toast({
                     title: "Data has loaded successfully.",
                     action: (
