@@ -25,8 +25,7 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
 
   const excludeGetRequestUrls = ["https://icanhazdadjoke.com/"];
-
-  if (url.pathname.startsWith("/@vite/") || url.pathname.startsWith("/@react-refresh") || excludeGetRequestUrls.some((e) => url.includes(e))) return;
+  if (url.pathname.startsWith("/@vite/") || url.pathname.startsWith("/@react-refresh") || excludeGetRequestUrls.some((e) => url.href.includes(e))) return;
 
   if (url.origin === location.origin) {
     const isStaticAsset = /\.(html|js|css|png|jpg|jpeg|gif|svg|woff2?|ttf|eot)(\?.*)?$/i.test(url.pathname);
