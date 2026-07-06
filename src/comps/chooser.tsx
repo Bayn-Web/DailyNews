@@ -20,14 +20,18 @@ import store from "@/store"
 
 export default () => {
   const arr: string[] = [];
-  if (localStorage.getItem("news") !== null) {
-    (JSON.parse(localStorage.getItem("news")!.split("::")[1]) as TheNew[]).forEach(r => {
-      if (arr.includes(r.sitename)) {
-        return
-      } else {
-        arr.push(r.sitename);
-      }
-    });
+  const raw = localStorage.getItem("news");
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw.split("::")[1]) as TheNew[];
+      parsed.forEach(r => {
+        if (!arr.includes(r.sitename)) {
+          arr.push(r.sitename);
+        }
+      });
+    } catch {
+      localStorage.removeItem("news");
+    }
   }
   const frameworks = arr.map(r => {
     return {

@@ -7,6 +7,8 @@ import { useToast } from "@/hooks/use-toast";
 import { buttonVariants } from "@/components/ui/button"
 import { ToastAction } from "@/components/ui/toast";
 import { cacheArticles } from "@/utils/db";
+import { useDispatch } from "react-redux";
+import { setCachedDay } from "@/store/source-store";
 
 const Loader = () => {
     return (
@@ -23,6 +25,7 @@ const Load = () => {
     const loaderRef = useRef<HTMLDivElement>(null);
     const toaster = useToast();
     let interval: undefined | NodeJS.Timeout;
+    const dispatch = useDispatch();
     useEffect(() => {
         if (localStorage.getItem("news") === null || localStorage.getItem("news")!.split("::")[0] !== getDay()) {
             interval = setInterval(() => {
@@ -49,6 +52,7 @@ const Load = () => {
                 })
                 localStorage.setItem("news", getDay() + "::" + JSON.stringify(res.data.data));
                 cacheArticles(res.data.data);
+                dispatch(setCachedDay(getDay()));
                 toaster.toast({
                     title: "Data has loaded successfully.",
                     action: (

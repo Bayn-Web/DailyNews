@@ -1,7 +1,7 @@
 import sourceStore from "./source-store";
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import storage from 'redux-persist/es/storage';
 
 const persistConfig = {
   key: 'root',
@@ -9,11 +9,9 @@ const persistConfig = {
   whitelist: ['source'],
 };
 
-const persistedReducer = persistReducer(persistConfig, sourceStore);
-
-export const store = configureStore({
+const store = configureStore({
   reducer: {
-    source: persistedReducer,
+    source: persistReducer(persistConfig, sourceStore),
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

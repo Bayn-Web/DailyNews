@@ -4,7 +4,6 @@ import App from './App'
 import { BrowserRouter } from 'react-router-dom'
 import { Toaster } from "@/components/ui/toaster"
 import { Provider } from 'react-redux'
-import { PersistGate } from 'redux-persist/integration/react'
 import store, { persistor } from './store'
 
 if ('serviceWorker' in navigator) {
@@ -13,15 +12,28 @@ if ('serviceWorker' in navigator) {
   })
 }
 
+function BootstrappedApp() {
+  const [ready, setReady] = React.useState(persistor.getState().bootstrapped)
+  React.useEffect(() => {
+    const unsub = persistor.subscribe(() => {
+      if (persistor.getState().bootstrapped) {
+        setReady(true)
+        unsub()
+      }
+    })
+    return unsub
+  }, [])
+  if (!ready) return null
+  return <App />
+}
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <App />
-        </PersistGate>
+        <BootstrappedApp />
+        <Toaster />
       </Provider>
-      <Toaster />
     </BrowserRouter>
   </React.StrictMode>
 )
